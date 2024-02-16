@@ -7,11 +7,13 @@ import 'package:riverpod_provider_eg/widgets/category_item_widget.dart';
 import '../model/meal.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key, required this.onToggleFav});
+  const CategoriesScreen(
+      {super.key, required this.onToggleFav, required this.availableMeals});
 
   final void Function(Meal meal) onToggleFav;
+  final List<Meal> availableMeals;
   _selectCategory(BuildContext context, CategoryModel category) {
-    var filteredData = dummyMeals
+    var filteredData = availableMeals
         .where((element) => element.categories.contains(category.id))
         .toList();
     Navigator.push(
@@ -35,12 +37,6 @@ class CategoriesScreen extends StatelessWidget {
           mainAxisSpacing: 10,
         ),
         children: [
-          // availableCategories
-          //     .map((cat) => CategoryItemWidget(
-          //           category: cat,
-          //           onClickCat: _selectCatory(context),
-          //         ))
-          //     .toList()
           for (final category in availableCategories) ...[
             CategoryItemWidget(
               category: category,
