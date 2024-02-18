@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FilterScreen extends StatefulWidget {
-  const FilterScreen({super.key, required this.selectedFilterState});
-  final Map<Filter, bool> selectedFilterState;
+import '../providers/filter_provider.dart';
+
+class FilterScreen extends ConsumerStatefulWidget {
+  const FilterScreen({super.key});
+
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<FilterScreen> createState() {
     return _FilterScreenState();
   }
 }
 
-class _FilterScreenState extends State<FilterScreen> {
+class _FilterScreenState extends ConsumerState<FilterScreen> {
   bool _isGlutenFree = false;
   bool _isLactoseFree = false;
   bool _isVegetarian = false;
@@ -17,10 +20,12 @@ class _FilterScreenState extends State<FilterScreen> {
 
   @override
   void initState() {
-    _isGlutenFree = widget.selectedFilterState[Filter.glutenFree]!;
-    _isLactoseFree = widget.selectedFilterState[Filter.lactoseFree]!;
-    _isVegetarian = widget.selectedFilterState[Filter.vegetarian]!;
-    _isVegan = widget.selectedFilterState[Filter.vegan]!;
+    final activeFilter = ref.read(filterProvider);
+
+    _isGlutenFree = activeFilter[Filter.glutenFree]!;
+    _isLactoseFree = activeFilter[Filter.lactoseFree]!;
+    _isVegetarian = activeFilter[Filter.vegetarian]!;
+    _isVegan = activeFilter[Filter.vegan]!;
     return super.initState();
   }
 
@@ -34,12 +39,13 @@ class _FilterScreenState extends State<FilterScreen> {
           canPop: false,
           onPopInvoked: (bool didPop) {
             if (didPop) return;
-            Navigator.of(context).pop({
+            ref.read(filterProvider.notifier).setFiltersToProvider({
               Filter.glutenFree: _isGlutenFree,
               Filter.lactoseFree: _isLactoseFree,
               Filter.vegetarian: _isVegetarian,
               Filter.vegan: _isVegan
             });
+            Navigator.of(context).pop();
           },
           child: Column(
             children: [
@@ -128,5 +134,3 @@ class _FilterScreenState extends State<FilterScreen> {
         ));
   }
 }
-
-enum Filter { glutenFree, lactoseFree, vegetarian, vegan }
