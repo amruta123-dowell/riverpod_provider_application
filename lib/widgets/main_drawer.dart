@@ -10,7 +10,7 @@ class MainDrawer extends StatelessWidget {
         child: Column(
       children: [
         DrawerHeader(
-          padding: EdgeInsets.all(26),
+          padding: const EdgeInsets.all(26),
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
               Theme.of(context).colorScheme.primaryContainer,
